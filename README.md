@@ -5,14 +5,17 @@ Fall 2026). A Raspberry Pi Pico 2 reads board temperatures, coil supply
 voltages and the A/B phase signal, and shows them on a 128x64 ST7565R LCD.
 **The firmware only monitors — it never controls the HV side.**
 
-> **Firmware is being rebuilt from scratch.** `src/` is empty for now; the
-> previous version is in git history (commit `903789a`). The pin map, brief,
-> fixes list and `docs/` are the spec for the rebuild.
+> **Firmware is being rebuilt from scratch.** The repo is an outline with no
+> code yet; the previous version is in git history (commit `903789a`). The pin
+> map, brief, fixes list and `docs/` are the spec for the rebuild.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
+| `src/` | Firmware source (empty outline): `config/`, `drivers/`, `sensors/`, `ui/`, plus `main.py` |
+| `tests/host/` | Laptop-side tests (empty) |
+| `tools/` | Helper scripts, e.g. deploy to the Pico (empty) |
 | `PINMAP.md` | GPIO → net → function, from the KiCad netlist |
 | `CLAUDE.md` | Firmware brief: architecture, conversion math, bring-up sequence |
 | `FIXES.md` | Firmware side of the known board issues |
