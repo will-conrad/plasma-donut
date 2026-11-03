@@ -1,5 +1,33 @@
 # Plasma Donut
 
+UVA ECE capstone (Fall 2026): a sealed glass torus of xenon, struck by an HV
+sparker and sustained by a 13.56 MHz class E oscillator driving two coils, with
+a Raspberry Pi Pico 2 control board for diagnostics (temperatures, coil supply
+voltages, A/B phase) on a 128x64 LCD.
+
+## Repository layout (current, Nov 2026)
+
+| Folder | What it is |
+|---|---|
+| `Microcontroller-PCB/` | Control board: KiCad 10 schematic + PCB (Pico 2, MCP3208 ADC, phase detector, LCD), custom footprints in `PlasmaDonut.pretty` |
+| `Microcontroller-PCB/datasheets/` | Part catalogue (per-part notes, `specs.csv`, `search.py`), design requirements, BOM-vs-orders, known issues, rework guide, `flagcheck/` rule checker, DRC/ERC reports. Vendor PDFs stay local, not in git |
+| `Footprints/` | Downloaded symbols/footprints/3D models used by the control board (`${KIPRJMOD}/../Footprints`) |
+| `pico-firmware/` | MicroPython firmware for the control board (monitor only, never controls the HV side), pin map, host-side tests |
+| `OSC-PCB/` | Class E oscillator board (KiCad) |
+| `HaloPlasma/` | KiCad project |
+| `Pulse Generator/KiCad Project/spark/` | Sparker / pulse generator board (KiCad) |
+| `Sims/` | ngspice decks and results, board previews |
+| `Enclosure CAD/` | Parametric enclosure script (PlasmaCan) |
+| `docs/` | **Superseded** first-pass design from Sept 2026 (GHz ignition, Raspberry Pi), kept for history |
+
+---
+
+## First-pass design (Sept 2026, superseded)
+
+Everything below is the original first-pass system design and no longer
+matches the build (the project moved to a Pico 2, a single 13.56 MHz class E
+oscillator, and HV spark ignition). Kept for reference.
+
 A benchtop capstone project: a sealed, glass **toroidal xenon chamber**, ionized
 inductively by a pair of driver coils (top and bottom), with the ionized
 xenon "torus" shape, height, and stability controlled by **detuning** the two

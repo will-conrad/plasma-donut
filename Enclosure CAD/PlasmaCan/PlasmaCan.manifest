@@ -1,0 +1,8 @@
+{
+  "autodeskProduct": "Fusion",
+  "type": "script",
+  "author": "Will Conrad + Claude",
+  "description": {"": "Parametric two-tier enclosure (the can) for the Plasma Donut xenon torus"},
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}
