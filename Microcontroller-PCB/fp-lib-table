@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "PlasmaDonut") (type "KiCad") (uri "${KIPRJMOD}/PlasmaDonut.pretty") (options "") (descr "Project footprints pulled from KiCad official library + LCD"))
+)

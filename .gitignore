@@ -1,0 +1,16 @@
+# KiCad
+*-backups/
+.history/
+*.lck
+*.kicad_prl
+*.bak
+fp-info-cache
+_archive/
+# Vendor datasheets (copyrighted — keep locally)
+Microcontroller-PCB/datasheets/pdf/
+Microcontroller-PCB/datasheets/text/
+*.db
+# OS / Python
+.DS_Store
+__pycache__/
+*.pyc

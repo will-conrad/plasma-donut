@@ -1,0 +1,202 @@
+(footprint "capacitor_250mil_pitch"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "250mil capacitor")
+	(tags "Capacitor cap ECE ECE3660")
+	(property "Reference" "REF**"
+		(at 3.75 -3.75 0)
+		(layer "F.SilkS")
+		(uuid "5179a436-bbdf-471b-893f-a12a1b7c820f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "capacitor_250mil_pitch"
+		(at 3.75 3.75 0)
+		(layer "F.Fab")
+		(uuid "f16b4817-5d46-4b78-b77c-f1d475a19766")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1cdf52b6-b959-418a-a312-469a3e1b2d64")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d1663cdd-7de0-4ee6-97a8-b0983dbed514")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -0.12 -2.62)
+		(end 6.4516 -2.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "d1190f3c-554f-4816-82fd-120dbe98d781")
+	)
+	(fp_line
+		(start -0.12 -1.234)
+		(end -0.12 -2.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "e0fe7e4d-3485-45a5-98e0-ad595f8b8af9")
+	)
+	(fp_line
+		(start -0.12 2.62)
+		(end -0.12 1.234)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "795ca346-366b-4684-b1ea-4124a8350482")
+	)
+	(fp_line
+		(start 6.4516 -2.62)
+		(end 6.4516 -1.234)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "62e73859-e41b-4c94-90a3-c2343db9887c")
+	)
+	(fp_line
+		(start 6.4516 1.234)
+		(end 6.4516 2.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "eda38e72-a0d8-402f-a696-23ea94b6141c")
+	)
+	(fp_line
+		(start 6.4516 2.62)
+		(end -0.12 2.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "bb55ef87-bb32-4bd2-acbc-352239078a3d")
+	)
+	(fp_rect
+		(start -1.25 -2.75)
+		(end 7.62 2.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "0e5b52d2-e27d-4fa1-89e2-7bb18f565b2d")
+	)
+	(fp_rect
+		(start 0 -2.5)
+		(end 6.35 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "f1ed2a0e-a384-4d41-ae69-d0faa71f1222")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 3.75 0 0)
+		(layer "F.Fab")
+		(uuid "bc0b5f72-28db-46a2-a410-f8db755359fb")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1.6002 1.6002)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3a579a78-9377-4021-9b77-3e49d941c923")
+		(padstack
+			(mode front_inner_back)
+			(layer "Inner"
+				(shape circle)
+				(size 1.6002 1.6002)
+				(zone_connect -1)
+			)
+			(layer "B.Cu"
+				(shape circle)
+				(size 2.032 2.032)
+				(zone_connect -1)
+			)
+		)
+	)
+	(pad "2" thru_hole circle
+		(at 6.35 0 90)
+		(size 1.6002 1.6002)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "af30d62c-d08a-4bc4-b542-df74ed49b9e3")
+		(padstack
+			(mode front_inner_back)
+			(layer "Inner"
+				(shape circle)
+				(size 1.6002 1.6002)
+				(zone_connect -1)
+			)
+			(layer "B.Cu"
+				(shape circle)
+				(size 2.032 2.032)
+				(zone_connect -1)
+			)
+		)
+	)
+	(embedded_fonts no)
+	(model "${KICAD9_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D7.5mm_W5.0mm_P7.50mm.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
