@@ -1,4 +1,0 @@
-(fp_lib_table
-	(version 7)
-	(lib (name "spark") (type "KiCad") (uri "${KIPRJMOD}/spark.pretty") (options "") (descr ""))
-)
