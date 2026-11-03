@@ -38,9 +38,7 @@ Raspberry Pi.
 This document is the first-pass system design: architecture, the reasoning
 behind each choice, concrete numbers, a sourced parts list, and the open
 questions still worth testing before committing to a full build. It is a
-starting point for the design, not a finished, verified circuit — see
-[Open Risks](#open-risks--what-to-test-first) before ordering the expensive
-parts.
+starting point for the design, not a finished, verified circuit.
 
 ## Contents
 
@@ -109,43 +107,3 @@ height and stability; see [`docs/control-system.md`](docs/control-system.md).
 Everything above is a **starting point**, chosen to be defensible and
 buildable, not a value pulled from thin air — the reasoning and sources for
 each number are in `docs/rf-design.md` and `docs/references.md`.
-
-## Open risks — what to test first
-
-1. **Does differential coil detuning actually move the plasma vertically?**
-   This is the load-bearing physical hypothesis of the whole "detuning
-   controls height" idea. The mechanism is plausible and grounded in real
-   plasma physics (a plasma is diamagnetic — it tends to exclude a rapidly
-   oscillating RF field, so the near-field of a more strongly driven coil
-   should push the plasma away from itself; two opposed coils with unequal
-   coupling should shift the equilibrium point where the two pushes
-   balance). But no source found here demonstrates this specific
-   geometry — it hasn't been validated for a toroidal chamber with two
-   coils. **Build a small single straight-tube, two-coil test article
-   first** and confirm the sign and rough magnitude of the effect before
-   committing to the full donut and its vacuum/glasswork cost.
-2. **GHz coil/applicator design.** At 2.45 GHz a multi-turn coil is not a
-   valid applicator (see `docs/rf-design.md`); a small resonant loop is.
-   That loop's exact dimensions depend on your final chamber geometry and
-   need EM simulation or bench tuning, not just hand calculation.
-3. **Vacuum + xenon fill system** is a whole subsystem (roughing pump, gas
-   manifold, capacitance manometer, seal-off or valve) not detailed here —
-   it's outside "RF design" but gates the whole project.
-
-## Safety (read before building)
-
-- **RF/microwave exposure.** Watts at 2.45 GHz is the same band as a
-  microwave oven. The chamber and both coil applicators need a fully
-  enclosed, gasketed metal enclosure with no gaps larger than a fraction of
-  a wavelength, and leakage should be measured, not assumed. This is a
-  hard requirement, not a nice-to-have.
-- **Sealed low-pressure glass vessel** is an implosion hazard. Handle and
-  operate behind a shield at all times.
-- **GaN HEMT bias sequencing.** The Wolfspeed CGH-series parts require Vgs
-  to be applied and set before Vds, per their datasheets, or the device is
-  destroyed. Use a real bias-sequencer circuit, not a single power switch.
-- **Regulatory path is FCC Part 18** (ISM/RF-heating equipment), not Part
-  15 (unintentional radiators) or Part 97 (amateur radio) — different
-  compliance rules apply.
-- Xenon itself is inert and non-toxic; the hazards here are the vacuum
-  system and the RF power, not the gas.
