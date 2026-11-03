@@ -51,7 +51,7 @@ Each window is $V_{pk}$ from $0.50/k$ (worst-case Schmitt threshold) to $1.38/k$
 2. **TP3 (SQ_A, at 74.0, 81.7)** → 330 Ω → **J15 pin 7 (GP5)**.
 3. **TP4 (SQ_B, at 72.5, 96.0)** → 330 Ω → **J15 pin 9 (GP7)**. J15 pin 1 is the square pad at the top.
 4. Twist each wire with a ground wire (J15 pin 14 = GND).
-5. In `src/config.py` set `BODGE_SQ_TO_GP5_GP7 = True`. The firmware then counts f_A and f_B with PIO.
+5. In `src/config/config.h` set `#define BODGE_SQ_TO_GP5_GP7 1`. The firmware then counts f_A and f_B with PIO.
 
 ## F · GPIO22 level shift for the 5 V oscillator (ISSUES #6)
 Only needed if J9 carries the raw output of the **5 V** HCMOS oscillator (LFSPXO025876). Check with Brennan.
@@ -64,4 +64,4 @@ Only needed if J9 carries the raw output of the **5 V** HCMOS oscillator (LFSPXO
 Stack a spare **1 µF** (C0805C105K3RACTU) on top of **C15 (27.1, 84.6)**, soldered end-to-end on the same pads.
 
 ---
-**After any rework:** run the host tests (`python3 -m pytest tests/host`), then follow the firmware bring-up order in `CLAUDE.md`.
+**After any rework:** run the host tests (see `tests/README.md`), then follow the firmware bring-up order in `CLAUDE.md`.

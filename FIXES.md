@@ -1,6 +1,6 @@
 # Firmware fixes for the Rev A board (2026-11-01)
 
-Implements the firmware side of `docs/ISSUES.md`. Host tests: `python3 -m pytest tests/host` (9 pass). **Nothing here has run on hardware yet.** Follow the bring-up order in CLAUDE.md and confirm each step on the board.
+> **Requirements for the C rebuild.** This file records the firmware side of `docs/ISSUES.md` as it was implemented in the earlier **MicroPython** firmware, which has been removed (see commit `903789a`). The file and function names below (`config.py`, `freq.py`, `self_test()` and so on) refer to that old code. **The behaviour each row describes is still required** and must be carried into the C rebuild. None of it ever ran on hardware.
 
 | Issue | What changed | Where |
 |---|---|---|

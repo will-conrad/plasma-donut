@@ -35,7 +35,7 @@ Net naming: **`VCC` = the 3.3 V rail** (Pico 3V3 out). `GND` and `GNDA` are sepa
 ## Step 0: build the pin map from the schematic
 Schematic: `~/Library/CloudStorage/OneDrive-UniversityofVirginia/Acedemics/2026/Fall 26/CAPSTONE/Microcontroller-PCB/Microcontroller-PCB.kicad_sch`. The folder was renamed once, so if it isn't there, search under `Fall 26` for `Microcontroller-PCB.kicad_sch`.
 
-Easiest route: `kicad-cli sch export netlist --format kicadxml` (KiCad 10; KiCad 9 can't read these files), then parse it. Otherwise parse the S-expressions directly. Produce `config.py` with one constant per GPIO, plus a table for Will in this form: **GPIO → net name → function**.
+Easiest route: `kicad-cli sch export netlist --format kicadxml` (KiCad 10; KiCad 9 can't read these files), then parse it. Otherwise parse the S-expressions directly. Produce `src/config/pins.h` with one `#define` per GPIO, plus a table for Will in this form: **GPIO → net name → function**.
 
 Check and report each of these:
 - **Frequency inputs**: which GPIOs are they, and are they **odd-numbered**? Only PWM **B** pins (GPIO 1, 3, 5, …) can count input edges in hardware (RP2040/RP2350 datasheet, PWM chapter). If any input sits on an even GPIO, use a PIO edge counter for it instead.
@@ -50,20 +50,26 @@ Check and report each of these:
 **Stop after Step 0 and have Will confirm the table.**
 
 ## Language and tools
-- **MicroPython** (the RP2350 / Pico 2 build). Deploy with `mpremote`. Will can also use Thonny.
-  - Why: the data rates are slow (the phase filter takes ≈ 8.3 ms to settle and the display refreshes at 5 Hz), the REPL makes hardware bring-up fast, and the team can read Python.
-  - The 13.56 MHz counting is done by the PWM or PIO hardware, so Python speed doesn't limit it.
-- Keep the conversion math in pure Python with no `machine` imports, so `pytest` can run it on the Mac without the board.
+- **C with the Raspberry Pi Pico SDK 2.3.1**, installed at `~/pico/pico-sdk` (team decision, 2026-11-03; replaces the earlier MicroPython plan).
+  - Build: `export PICO_SDK_PATH=~/pico/pico-sdk`, then `cmake -B build -DPICO_BOARD=pico2 && cmake --build build`. `PICO_BOARD=pico2` selects the RP2350 Pico 2 board file (`src/boards/include/boards/pico2.h` in the SDK).
+  - The top-level `CMakeLists.txt` includes `pico_sdk_import.cmake` (copy it from `$PICO_SDK_PATH/external/`) before `project()`, then calls `pico_sdk_init()`.
+  - Needs an Arm GNU toolchain (`arm-none-eabi-gcc`) and CMake on the Mac. Check with `which arm-none-eabi-gcc cmake` before the first build.
+  - Flash: hold BOOTSEL while plugging in USB, then copy `build/<target>.uf2` to the drive that appears, or use `picotool load -x build/<target>.uf2`.
+  - USB serial (the CSV log and debug prints): `pico_enable_stdio_usb(<target> 1)` and `pico_enable_stdio_uart(<target> 0)` in CMake, `stdio_init_all()` in `main()`. Open it on the Mac with `screen /dev/tty.usbmodem* 115200`.
+- **Host tests:** keep the conversion math (`src/sensors/`) and the button state machine in plain C **with no SDK headers**, so they compile with the Mac's `cc` and run from `tests/host/` without the board. Use plain `assert` or a small framework such as Unity.
+- **Calibration storage:** the last 4 kB flash sector (the `pico2` default flash is 4 MB, `PICO_FLASH_SIZE_BYTES` in `pico2.h`). Use `hardware_flash` (`flash_range_erase` / `flash_range_program`) wrapped in `flash_safe_execute()` (`pico_flash`). Store a version number plus a CRC, and fall back to defaults if the CRC doesn't match.
 
-Suggested layout:
+Layout (matches the repo outline):
 ```
-pico-firmware/
-  CLAUDE.md          (this file)
-  src/  main.py config.py mcp3208.py st7565.py freq.py sensors.py ui.py cal.py
-  tests/host/        (pytest: conversions, button state machine)
-  tests/hw/          (one tiny script per bring-up step)
+CMakeLists.txt       (to be written)
+src/main.c
+src/config/          pins.h (from PINMAP.md), config.h (limits, flags), cal.c/.h (flash calibration)
+src/drivers/         mcp3208.c/.h, st7565.c/.h, picoadc.c/.h, freq.c/.h
+src/sensors/         conversions (pure C, host-testable)
+src/ui/              pages, buttons, backlight
+tests/host/          host C tests: conversions, button state machine
+tests/hw/            one tiny program per bring-up step
 ```
-Calibration values live in `cal.json` on the Pico's filesystem.
 
 ## Drivers
 
@@ -75,11 +81,11 @@ Calibration values live in `cal.json` on the Pico's filesystem.
   - Result = `((rx[1] & 0x0F) << 8) | rx[2]`.
   - Byte 1 is five leading zeros, the start bit, SGL = 1, then D2.
 - Oversample 16 times per reading and average.
-- **Channel map [netlist]:** CH0 MOS A, CH1 MOS B, CH2 Coil A, CH3 Coil B, **CH4/CH5 not driven (never display)**, CH6 phase, CH7 spare (J14). Implemented in `src/mcp3208.py`.
+- **Channel map [netlist]:** CH0 MOS A, CH1 MOS B, CH2 Coil A, CH3 Coil B, **CH4/CH5 not driven (never display)**, CH6 phase, CH7 spare (J14).
 
 ### LCD: ST7565R, 4-wire SPI
-- **Memory layout:** 8 pages × 128 columns, one byte = 8 vertical pixels, which matches MicroPython `framebuf.MONO_VLSB`.
-- **Initialization (nhd_c12864lz p.13):** hardware reset, then `A2` (1/9 bias), `A0` (ADC normal), `C8`+`C0` (the vendor sends both; the second wins, so COM = normal), `40` (start line 0), `25` (resistor ratio 5), `81 19` (electronic volume 0x19), `2F` (all power circuits on), `AF` (display on). Command codes are in st7565r p.50, Table 16. Tune contrast with the volume byte on the hardware. Implemented in `src/st7565.py`.
+- **Memory layout:** 8 pages × 128 columns, one byte = 8 vertical pixels, so keep a 1024-byte framebuffer (`uint8_t fb[8][128]`), draw into it, and send it page by page.
+- **Initialization (nhd_c12864lz p.13):** hardware reset, then `A2` (1/9 bias), `A0` (ADC normal), `C8`+`C0` (the vendor sends both; the second wins, so COM = normal), `40` (start line 0), `25` (resistor ratio 5), `81 19` (electronic volume 0x19), `2F` (all power circuits on), `AF` (display on). Command codes are in st7565r p.50, Table 16. Tune contrast with the volume byte on the hardware.
 - **SPI:** write-only (st7565r p.24), SI sampled on the rising edge, MSB first, so mode 0 works. Clock period ≥ 50 ns at 3.3 V and ≥ 100 ns at 2.7 V (st7565r p.64), so run at **≤ 10 MHz**. /RES low pulse ≥ 1 µs at 3.3 V (st7565r p.65).
 - **Supply:** VDD max is 3.3 V (nhd_c12864lz p.7), so the 3.3 V rail is at the limit. Operating temperature is −20 to 70 °C (p.7).
 - **RF immunity:** the LCD sits near a 13.56 MHz field, so re-send the init sequence every ~5 s and redraw. This recovers from RF-induced glitches without anyone noticing.
@@ -88,17 +94,17 @@ Calibration values live in `cal.json` on the Pico's filesystem.
 ### Frequency counter
 - **Hardware counter:** in PWM counter mode (DIVMODE = rising edge of B), the counter advances on each rising edge of the B pin. Both the high and low periods must be longer than one system-clock period, so the input must be below $f_{sys}/2$, which is 75 MHz at the RP2350's 150 MHz default. 13.56 MHz is fine.
 - **16-bit wrap:** at 13.56 MHz the counter wraps every ~4.8 ms. Either use the clock divider as a prescaler or count wraps.
-- **Targets:** resolution ≤ 1 kHz, update ≥ 2 Hz. Measure the actual gate time with `ticks_us()` and compute $f = \frac{\text{edges}}{t_{gate}}$.
-- **Channels as built [netlist]:** only the oscillator tap (GPIO22). GPIO22 is an even pin (PWM A), so PWM counting can't be used on it (rp2350 p.980). Use **GPIN1 + the FC0 frequency counter** instead (GPIO22 FUNCSEL 9, rp2350 p.19; FC0 Table 574 p.476), or a PIO counter; both are in `src/freq.py`. Per-coil f_A/f_B needs the docs/REWORK.md step E bodge (TP3→GP5, TP4→GP7). Δf = 0 by design, because one crystal drives both coils.
-- **"Oscillating?" flag:** true when the oscillator tap reads within 13.56 MHz ± 5%. Put the window in `config.py`.
+- **Targets:** resolution ≤ 1 kHz, update ≥ 2 Hz. Measure the actual gate time with `time_us_64()` and compute $f = \frac{\text{edges}}{t_{gate}}$.
+- **Channels as built [netlist]:** only the oscillator tap (GPIO22). GPIO22 is an even pin (PWM A), so PWM counting can't be used on it (rp2350 p.980). Use **GPIN1 + the FC0 frequency counter** instead (GPIO22 FUNCSEL 9, rp2350 p.19; FC0 Table 574 p.476), or a PIO counter. With the SDK: `gpio_set_function(22, GPIO_FUNC_GPCK)`, then `frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLKSRC_GPIN1)`, which the SDK documents as accurate to ±1 kHz (`hardware/clocks.h`, SDK 2.3.1). Per-coil f_A/f_B needs the docs/REWORK.md step E bodge (TP3→GP5, TP4→GP7). Δf = 0 by design, because one crystal drives both coils.
+- **"Oscillating?" flag:** true when the oscillator tap reads within 13.56 MHz ± 5%. Put the window in `config.h`.
 
-## Conversions (sensors.py; unit-test these on the host)
+## Conversions (`src/sensors/`; unit-test these on the host)
 Let $N$ be the 12-bit code and $V_{ref}$ the `/VREF_ADC` voltage. Then $V_{pin} = \frac{N}{4096}V_{ref}$.
 
 **Coil VDD (100k/10k divider, Pico ADC0/ADC1) [netlist]:**
 $$V_{DD} = V_{pin}\cdot\frac{100\,\text{k}\Omega + 10\,\text{k}\Omega}{10\,\text{k}\Omega} = 11\,V_{pin}$$
 The full-scale reading is $3.3 \times 11 = 36.3$ V [calc]. Also report $\Delta V_{DD} = V_{DD,A} - V_{DD,B}$.
-- The RP2350 ADC's input impedance is only ≥ 100 kΩ (rp2350 p.1339) against a 9.1 kΩ source, so read in **16-sample bursts ≥ 5 ms apart** and apply a per-channel gain calibration (`src/picoadc.py`, `cal.json`). ENOB is 9–9.5 bits (rp2350 p.1339), so expect a step of about 70 mV [calc].
+- The RP2350 ADC's input impedance is only ≥ 100 kΩ (rp2350 p.1339) against a 9.1 kΩ source, so read in **16-sample bursts ≥ 5 ms apart** and apply a per-channel gain calibration (gains stored in flash; see Calibration storage). ENOB is 9–9.5 bits (rp2350 p.1339), so expect a step of about 70 mV [calc].
 
 **Thermistors (Beta model):**
 $$\frac{1}{T} = \frac{1}{T_0} + \frac{1}{B}\ln\!\left(\frac{R}{R_0}\right),\quad R_0 = 10\,\text{k}\Omega,\; T_0 = 298.15\,\text{K},\; B = 3435\,\text{K}$$
@@ -119,7 +125,7 @@ $$\phi = 180^\circ\cdot\frac{V_{pin}}{V_{logic}} - \phi_0$$
 **Calibration routine (Setup page → "Zero phase"):**
 1. Prompt the user to feed the same signal to both inputs.
 2. Average for 2 s.
-3. Save $\phi_0$ to `cal.json`.
+3. Save $\phi_0$ to the flash calibration sector.
 
 ## UI
 - **Buttons:** both active-low, with 20 ms software debounce.
@@ -135,10 +141,10 @@ $$\phi = 180^\circ\cdot\frac{V_{pin}}{V_{logic}} - \phi_0$$
 | 4 Phase | φ (deg), raw volts, φ₀, settled/unsettled |
 | 5 Setup | backlight %, contrast, zero-phase cal, about/version |
 
-**Over-temperature warning:** a per-sensor threshold in `config.py`. Use 80 °C as a **placeholder** until Brennan confirms the real MOSFET and coil limits. When it trips, invert the status bar and blink the backlight. **Monitor only:** don't switch anything off.
+**Over-temperature warning:** a per-sensor threshold in `config.h`. Use 80 °C as a **placeholder** until Brennan confirms the real MOSFET and coil limits. When it trips, invert the status bar and blink the backlight. **Monitor only:** don't switch anything off.
 
 ## Main loop
-A cooperative scheduler using `time.ticks_ms()`, with no threads:
+A cooperative scheduler in a single loop on core 0, timed with `time_us_64()` (or `absolute_time_t`), with no RTOS:
 - buttons every 10 ms
 - ADC sweep every 50 ms
 - frequency gate running continuously and read when done
@@ -146,11 +152,11 @@ A cooperative scheduler using `time.ticks_ms()`, with no threads:
 - LCD re-init every 5 s
 - **USB CSV log line** at 2 Hz, for bench data capture and Milestone 2 evidence. Columns: `t_ms, T_mosA, T_mosB, T_coilA, T_coilB, VDD_A, VDD_B, f_A, f_B, f_osc, phase`.
 
-Add a `machine.WDT(timeout=2000)`, fed once per loop.
+Enable the watchdog with `watchdog_enable(2000, true)` (`hardware_watchdog`) and call `watchdog_update()` once per loop.
 
-## Bring-up order (each step has a script in `tests/hw/` and is confirmed by Will on hardware before the next)
-1. REPL and onboard LED blink.
-2. Buttons: print presses to the REPL.
+## Bring-up order (each step has a small test program in `tests/hw/` and is confirmed by Will on hardware before the next)
+1. Onboard LED blink, plus a "hello" over USB serial.
+2. Buttons: print presses over USB serial.
 3. LCD: init, then show "Hello Donut". Tune contrast.
 4. Backlight PWM sweep.
 5. MCP3208: print all 8 raw codes, with a channel tied to VCC (≈4095) and to GND (≈0) as sanity checks.
