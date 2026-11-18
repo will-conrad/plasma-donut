@@ -73,6 +73,7 @@ Every number in a doc, review or chat answer carries exactly one tag:
 | **R-E1** | Decoupling caps sit within 5 mm of their pin and are placed physically. A net label alone doesn't count. | Will's rule; diode reviewer checks decoupling placement | auto: distance from the PCB |
 | **R-E2** | Zero DRC errors is necessary but **not sufficient**. Treat unrouted nets as errors, record waivers with a reason, and cross-check with the fab's DFM. | tinycomputers: "Never trust a single tool's DRC as authoritative". dev.to: "five were routed with zero DRC errors, but four still had pin-level mistakes"; Gerbers were exported with unrouted nets | auto: ERC/DRC/parity + `WAIVERS` |
 | **R-E3** | Each footprint must match the **ordered** package (pitch, pin 1, variant). | dev.to: a 10 nF cap on an electrolytic footprint; a BOM connector from a different maker than its land pattern | auto: `PACKAGE` |
+| **R-E4** | **Silkscreen gate before the final gerber export.** Every placed footprint's reference (R1, C3, TP1, …) is printed on F.SilkS/B.SilkS, not hidden, not left on F.Fab only, and readable next to its part (not under a part or clipped by a pad). Check the silk renders top and bottom by eye as well. Don't generate final gerbers until it passes. | **Here:** Rev A shipped with 26 refs unprinted (R4–R7, R23, R29–R31, C36–C38, D1, TP1–TP8, JP1–JP4, H1–H2), so the assembler needed a separate drawing (Will, 2026-11-07) | auto: `chk_silk` (R-E4) + M: look at the silk render |
 
 ### F · BOM and procurement
 | ID | Rule | Why | Check |
@@ -103,6 +104,7 @@ Every number in a doc, review or chat answer carries exactly one tag:
 | 11/01 | A pickup-scaling table listed "6–17 V" when that option's window is 8.6–24 V | R-D1 |
 | 11/01 | The first rework-map overlay used assumed coordinates; I fixed it after viewing the render | R-G3 |
 | 11/01 | The first ERC run showed 285 "violations": all library-path warnings, not design errors | R-E2 |
+| 11/07 | Rev A gerbers went to fab with 26 reference designators on F.Fab or hidden, none printed on the board | R-E4 |
 
 ## Sources
 - JITX, "Testing Generative AI for Circuit Board Design": https://blog.jitx.com/jitx-corporate-blog/testing-generative-ai-for-circuit-board-design

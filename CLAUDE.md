@@ -170,7 +170,7 @@ Enable the watchdog with `watchdog_enable(2000, true)` (`hardware_watchdog`) and
 - Is there any MCU-controlled on/off or enable line? The MVP describes an "on/off switch integrated into the LCD".
 - What are the real over-temperature limits per part?
 - Does the passive stabilization coil tap go to the ADC, to a frequency input, or both?
-- ~~Has the R19/R22 = 7.15 kΩ fix been applied?~~ Yes, in the schematic [netlist]. The parts are on order 8 (in transit).
+- ~~Has the R19/R22 = 7.15 kΩ fix been applied?~~ Yes, in the schematic [netlist]. The parts arrived on order 8 (Will, 2026-11-07).
 - What pickup amplitudes reach J16/J17? With R25/R26 ≈ ÷34, the Schmitt works cleanly for about **17–47 V pk at the terminals** [calc, DC-08]. Rescale options are in docs/REWORK.md step D.
 
 ## Sources

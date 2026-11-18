@@ -8,7 +8,7 @@ These are the hardware fixes from [ISSUES.md](ISSUES.md), written as bench steps
 
 ---
 
-## A · Stop-gaps while order 8 is late (ISSUES #1)
+## A · Stop-gaps while order 8 was late (ISSUES #1, closed 2026-11-07: all parts arrived, so undo these)
 | Ref | Location | If the real part isn't here yet | When the real part arrives |
 |---|---|---|---|
 | R3 (10 Ω) | (33.4, 80.1), next to the 3V3 test pad | Solder bridge across the pads (0 Ω). VREF loses its RC filter but keeps C17's 10 µF | Remove the bridge, fit 10 Ω |
