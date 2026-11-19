@@ -24,10 +24,12 @@ voltages and the A/B phase signal, and shows them on a 128x64 ST7565R LCD.
 | `docs/design-requirements.md` | Design requirements (`DC-xx` in code) |
 | `docs/RULES.md` | Claim-tag rules: `(part p.N)`, `[netlist]`, `[calc]`, `[web]`, `[assumed]` |
 | `docs/parts/` | Datasheet notes + `specs.csv` for the parts the firmware talks to |
+| `hardware/` | V2 board material: every datasheet PDF with a full-text `.md` beside it (`hardware/datasheets/INDEX.md`), and the Rev A KiCad files, gerbers and BOMs once imported (`hardware/README.md`) |
 
-The source of truth for pins is the KiCad schematic, which lives outside this
-repo (OneDrive `CAPSTONE/Microcontroller-PCB/`), along with the full datasheet
-PDFs that `(part p.N)` citations point to.
+The source of truth for pins is the KiCad schematic. Until it's imported into
+`hardware/rev-a/kicad/` with `hardware/import_from_mac.sh`, it lives on OneDrive
+(`CAPSTONE/Microcontroller-PCB/`). The datasheet PDFs that `(part p.N)`
+citations point to are in `hardware/datasheets/`.
 
 ## Build (once the code exists)
 

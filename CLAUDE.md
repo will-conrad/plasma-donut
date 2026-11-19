@@ -2,7 +2,7 @@
 
 This is the handoff for writing the control-board firmware for the **Plasma Donut** capstone (UVA ECE, Fall 2026). Read the whole file before writing code.
 
-> **Datasheet update 2026-11-02.** This brief has been corrected against the real schematic and the datasheet catalogue (part notes in `docs/parts/`; full PDFs + `search.py` in the OneDrive `CAPSTONE/Microcontroller-PCB/datasheets/`). Follow the claim-tag rules in `docs/RULES.md`: `(part p.N)` = cited datasheet page, `[netlist]` = KiCad fact, `[calc]`, `[web]`, `[assumed]`. Pin map: PINMAP.md. Firmware fixes: FIXES.md.
+> **Datasheet update 2026-11-02.** This brief has been corrected against the real schematic and the datasheet catalogue (part notes in `docs/parts/`; full PDFs, their page-by-page `.md` text and `search.py` in `hardware/datasheets/`). Follow the claim-tag rules in `docs/RULES.md`: `(part p.N)` = cited datasheet page, `[netlist]` = KiCad fact, `[calc]`, `[web]`, `[assumed]`. Pin map: PINMAP.md. Firmware fixes: FIXES.md.
 
 ## The project in one paragraph
 A sealed glass torus of low-pressure xenon is ionized by an HV "sparker" and sustained by a 13.56 MHz class E oscillator driving two flat coils (A above, B below), with a passive stabilization coil in the middle. Will Conrad owns the **low-voltage control board**: a Raspberry Pi Pico 2 that reads temperatures, coil supply voltages, pickup-coil frequencies and the A–B phase difference, and shows them on a 128×64 LCD you page through with two buttons. The HV boards belong to Brennan Coleman (oscillator/drivers) and Alexis Easton (sparker); Alexis also helps on firmware.
@@ -174,7 +174,7 @@ Enable the watchdog with `watchdog_enable(2000, true)` (`hardware_watchdog`) and
 - What pickup amplitudes reach J16/J17? With R25/R26 ≈ ÷34, the Schmitt works cleanly for about **17–47 V pk at the terminals** [calc, DC-08]. Rescale options are in docs/REWORK.md step D.
 
 ## Sources
-- **Local datasheet catalogue (primary):** part notes + `specs.csv` in `docs/parts/`; PDFs and `search.py` in OneDrive `CAPSTONE/Microcontroller-PCB/datasheets/`, with page-verified citations in the `(part p.N)` form.
+- **Local datasheet catalogue (primary):** part notes + `specs.csv` in `docs/parts/`; PDFs, full-text `.md` twins (`## Page N` = p.N) and `search.py` in `hardware/datasheets/` (start at `INDEX.md`), with page-verified citations in the `(part p.N)` form.
 - Microchip MCP3204/3208 datasheet, DS21298E: https://www.microchip.com/content/dam/mchp/documents/APID/ProductDocuments/DataSheets/21298e.pdf
 - Newhaven NHD-C12864LZ-FSW-FBW-3V3 (ST7565R, 4-wire SPI): https://newhavendisplay.com/128x64-graphic-cog-lcd-fstn-display-with-white-side-backlight/
 - Vishay NTCS0603E3 datasheet, doc 29056 (B25/85 = 3435 K ±1 %): local pdf/ntcs0603e3.pdf p.1

@@ -5,7 +5,7 @@
 | Manufacturer | Newhaven Display |
 | Role on board | 128x64 COG LCD module, ST7565R, 4-wire SPI, white LED backlight |
 | Ref des | DS1 |
-| Datasheet | [pdf/nhd_c12864lz.pdf](../pdf/nhd_c12864lz.pdf) · text [text/nhd_c12864lz.txt](../text/nhd_c12864lz.txt) · 15 pages |
+| Datasheet | [pdf/nhd_c12864lz.pdf](../../hardware/datasheets/nhd_c12864lz.pdf) · text [text/nhd_c12864lz.txt](../../hardware/datasheets/nhd_c12864lz.md) · 15 pages |
 | Revision | Rev 12 (10/30/2023) |
 | Source | https://newhavendisplay.com/content/specs/NHD-C12864LZ-FSW-FBW-3V3.pdf |
 | Requirements / checks | REQ-12, REQ-13, REQ-16; DC-02, DC-03, DC-04, DC-13, DC-17 (see [design-requirements.md](../design-requirements.md), [ISSUES.md](../ISSUES.md)) |
@@ -29,18 +29,18 @@
 
 | Category | Parameter | Sym | Min | Typ | Max | Unit | Conditions | Page |
 |---|---|---|---|---|---|---|---|---|
-| power | Supply voltage | VDD | 2.7 | 3.0 | 3.3 | V |  | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| power | Supply current | IDD | 0.2 | 0.5 | 2.0 | mA | VDD = 3.0 V | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| power | LCD drive (contrast) voltage | VLCD | 8.2 | 8.5 | 8.8 | V | 25 °C, generated internally | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| digital | Input high | VIH | 0.8·VDD |  | VDD | V | = 2.64 V at 3.3 V | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| digital | Input low | VIL | VSS |  | 0.2·VDD | V |  | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| backlight | LED backlight current | ILED | 60 | 80 | 100 | mA | drive by current, not voltage | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| backlight | LED backlight voltage | VLED | 2.7 | 3.0 | 3.3 | V | ILED = 80 mA | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| thermal | Operating temperature | TOP | -20 |  | 70 | °C |  | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
-| pinout | 28-pin LCD connector |  |  |  |  |  | 1 /CS1, 2 /RES, 3 A0, 4 /WR, 5 /RD, 6–11 DB0–DB5 (NC in serial), 12 DB6=SCL, 13 DB7=SI, 14 VDD, 15 VSS, 16 VOUT, 17–21 charge-pump caps, 22–26 V4–V0, 27 C86, 28 PS (L = serial) | [p.6](../pdf/nhd_c12864lz.pdf#page=6) |
-| passives | Charge-pump and bias caps |  |  | 1 |  | µF | VOUT, CAP pins 1 µF; V0–V4 1.0–2.2 µF to VSS | [p.6](../pdf/nhd_c12864lz.pdf#page=6) |
-| mechanical | Connector pitch |  |  | 1.27 |  | mm | LCD pins; backlight pins 1.5 mm wide; breakout NHD-PCB40 | [p.6](../pdf/nhd_c12864lz.pdf#page=6) |
-| firmware | Example init sequence |  |  |  |  |  | A2, A0, C8, C0, 40, 25, 81, 19, 2F, AF (note C8 is immediately overridden by C0) | [p.13](../pdf/nhd_c12864lz.pdf#page=13) |
-| optical | Response time (rise) | Tr |  | 150 |  | ms |  | [p.7](../pdf/nhd_c12864lz.pdf#page=7) |
+| power | Supply voltage | VDD | 2.7 | 3.0 | 3.3 | V |  | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| power | Supply current | IDD | 0.2 | 0.5 | 2.0 | mA | VDD = 3.0 V | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| power | LCD drive (contrast) voltage | VLCD | 8.2 | 8.5 | 8.8 | V | 25 °C, generated internally | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| digital | Input high | VIH | 0.8·VDD |  | VDD | V | = 2.64 V at 3.3 V | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| digital | Input low | VIL | VSS |  | 0.2·VDD | V |  | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| backlight | LED backlight current | ILED | 60 | 80 | 100 | mA | drive by current, not voltage | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| backlight | LED backlight voltage | VLED | 2.7 | 3.0 | 3.3 | V | ILED = 80 mA | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| thermal | Operating temperature | TOP | -20 |  | 70 | °C |  | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
+| pinout | 28-pin LCD connector |  |  |  |  |  | 1 /CS1, 2 /RES, 3 A0, 4 /WR, 5 /RD, 6–11 DB0–DB5 (NC in serial), 12 DB6=SCL, 13 DB7=SI, 14 VDD, 15 VSS, 16 VOUT, 17–21 charge-pump caps, 22–26 V4–V0, 27 C86, 28 PS (L = serial) | [p.6](../../hardware/datasheets/nhd_c12864lz.pdf#page=6) |
+| passives | Charge-pump and bias caps |  |  | 1 |  | µF | VOUT, CAP pins 1 µF; V0–V4 1.0–2.2 µF to VSS | [p.6](../../hardware/datasheets/nhd_c12864lz.pdf#page=6) |
+| mechanical | Connector pitch |  |  | 1.27 |  | mm | LCD pins; backlight pins 1.5 mm wide; breakout NHD-PCB40 | [p.6](../../hardware/datasheets/nhd_c12864lz.pdf#page=6) |
+| firmware | Example init sequence |  |  |  |  |  | A2, A0, C8, C0, 40, 25, 81, 19, 2F, AF (note C8 is immediately overridden by C0) | [p.13](../../hardware/datasheets/nhd_c12864lz.pdf#page=13) |
+| optical | Response time (rise) | Tr |  | 150 |  | ms |  | [p.7](../../hardware/datasheets/nhd_c12864lz.pdf#page=7) |
 
 _Pages are PDF page numbers (they match the `=== p.N ===` markers in the text file)._

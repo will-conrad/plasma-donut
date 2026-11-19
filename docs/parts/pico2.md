@@ -5,7 +5,7 @@
 | Manufacturer | Raspberry Pi |
 | Role on board | MCU module: RP2350, 3.3 V SMPS, USB |
 | Ref des | A1 (SC1631) |
-| Datasheet | [pdf/pico2.pdf](../pdf/pico2.pdf) · text [text/pico2.txt](../text/pico2.txt) · 24 pages |
+| Datasheet | [pdf/pico2.pdf](../../hardware/datasheets/pico2.pdf) · text [text/pico2.txt](../../hardware/datasheets/pico2.md) · 24 pages |
 | Revision | Build date 03/07/2026 |
 | Source | https://datasheets.raspberrypi.com/pico/pico-2-datasheet.pdf |
 | Requirements / checks | REQ-10, REQ-11, REQ-16; DC-01, DC-06, DC-15, DC-17 (see [design-requirements.md](../design-requirements.md), [ISSUES.md](../ISSUES.md)) |
@@ -30,17 +30,17 @@
 
 | Category | Parameter | Sym | Min | Typ | Max | Unit | Conditions | Page |
 |---|---|---|---|---|---|---|---|---|
-| power | VBUS input (USB) | VBUS |  | 5 |  | V | ±10% | [p.13](../pdf/pico2.pdf#page=13) |
-| power | VSYS input range | VSYS | 1.8 |  | 5.5 | V | feeds RT6150 buck-boost | [p.13](../pdf/pico2.pdf#page=13) |
-| power | 3V3 pin external load (recommended) |  |  |  | 300 | mA | depends on RP2350 load and VSYS | [p.10](../pdf/pico2.pdf#page=10) |
-| power | 3V3_EN pull-up |  |  | 100 |  | kΩ | to VSYS; short low to disable 3.3 V | [p.10](../pdf/pico2.pdf#page=10) |
-| power | VBUS→VSYS diode | D1 |  | Schottky |  |  | VSYS = VBUS − diode drop; safe to OR another source via diode/PFET | [p.16](../pdf/pico2.pdf#page=16) |
-| analog | ADC_VREF filter | R7/C |  | 201 Ω / 2.2 µF |  |  | from 3V3; ~150 µA ADC draw gives ~30 mV offset | [p.15](../pdf/pico2.pdf#page=15) |
-| analog | ADC_VREF external shunt option |  |  | 3.0 |  | V | LM4040 suggested; ~1.5 mA through 200 Ω | [p.15](../pdf/pico2.pdf#page=15) |
-| io | ADC-capable GPIO26–29 max input |  |  |  | IOVDD+0.3 | V | internal diode to IOVDD; leaks into 3V3 if unpowered | [p.15](../pdf/pico2.pdf#page=15) |
-| io | Internal-use GPIOs |  |  |  |  |  | GPIO23 SMPS PS, GPIO24 VBUS sense, GPIO25 LED, GPIO29 VSYS/3 | [p.9](../pdf/pico2.pdf#page=9) |
-| pinout | Power pins |  |  |  |  |  | 40 VBUS, 39 VSYS, 37 3V3_EN, 36 3V3, 35 ADC_VREF, 33 AGND | [p.9](../pdf/pico2.pdf#page=9) |
-| thermal | Operating temperature |  | -20 |  | 85 | °C | incl. self-heating; recommended max ambient 70 °C | [p.13](../pdf/pico2.pdf#page=13) |
-| power | SMPS mode pin | GPIO23 |  |  |  |  | drive high = PWM mode, lower ripple on ADC_VREF | [p.15](../pdf/pico2.pdf#page=15) |
+| power | VBUS input (USB) | VBUS |  | 5 |  | V | ±10% | [p.13](../../hardware/datasheets/pico2.pdf#page=13) |
+| power | VSYS input range | VSYS | 1.8 |  | 5.5 | V | feeds RT6150 buck-boost | [p.13](../../hardware/datasheets/pico2.pdf#page=13) |
+| power | 3V3 pin external load (recommended) |  |  |  | 300 | mA | depends on RP2350 load and VSYS | [p.10](../../hardware/datasheets/pico2.pdf#page=10) |
+| power | 3V3_EN pull-up |  |  | 100 |  | kΩ | to VSYS; short low to disable 3.3 V | [p.10](../../hardware/datasheets/pico2.pdf#page=10) |
+| power | VBUS→VSYS diode | D1 |  | Schottky |  |  | VSYS = VBUS − diode drop; safe to OR another source via diode/PFET | [p.16](../../hardware/datasheets/pico2.pdf#page=16) |
+| analog | ADC_VREF filter | R7/C |  | 201 Ω / 2.2 µF |  |  | from 3V3; ~150 µA ADC draw gives ~30 mV offset | [p.15](../../hardware/datasheets/pico2.pdf#page=15) |
+| analog | ADC_VREF external shunt option |  |  | 3.0 |  | V | LM4040 suggested; ~1.5 mA through 200 Ω | [p.15](../../hardware/datasheets/pico2.pdf#page=15) |
+| io | ADC-capable GPIO26–29 max input |  |  |  | IOVDD+0.3 | V | internal diode to IOVDD; leaks into 3V3 if unpowered | [p.15](../../hardware/datasheets/pico2.pdf#page=15) |
+| io | Internal-use GPIOs |  |  |  |  |  | GPIO23 SMPS PS, GPIO24 VBUS sense, GPIO25 LED, GPIO29 VSYS/3 | [p.9](../../hardware/datasheets/pico2.pdf#page=9) |
+| pinout | Power pins |  |  |  |  |  | 40 VBUS, 39 VSYS, 37 3V3_EN, 36 3V3, 35 ADC_VREF, 33 AGND | [p.9](../../hardware/datasheets/pico2.pdf#page=9) |
+| thermal | Operating temperature |  | -20 |  | 85 | °C | incl. self-heating; recommended max ambient 70 °C | [p.13](../../hardware/datasheets/pico2.pdf#page=13) |
+| power | SMPS mode pin | GPIO23 |  |  |  |  | drive high = PWM mode, lower ripple on ADC_VREF | [p.15](../../hardware/datasheets/pico2.pdf#page=15) |
 
 _Pages are PDF page numbers (they match the `=== p.N ===` markers in the text file)._

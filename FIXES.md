@@ -23,7 +23,7 @@
 2. With a function generator at 3.3 V into J9: `freq.OscFC0().read_hz()` should read about 13.56e6.
 
 ## Datasheet update (2026-11-02)
-Every value below cites its page in `Microcontroller-PCB/datasheets/pdf`, or is tagged [web], [calc] or [netlist].
+Every value below cites its page in `hardware/datasheets/` (formerly OneDrive `Microcontroller-PCB/datasheets/pdf`), or is tagged [web], [calc] or [netlist].
 - **config.py**, new section "Datasheet-derived limits":
   - MCP3208 timing (p.3)
   - LCD SPI clock, reset timing and vendor init sequence (st7565r p.64–65, nhd_c12864lz p.13, command codes st7565r p.50)

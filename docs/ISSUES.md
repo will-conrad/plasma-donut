@@ -1,6 +1,6 @@
 # Control board: issues and fixes using parts on hand
 
-Constraint: no new purchases. Every fix below uses parts already bought (see [BOM-vs-orders.md](BOM-vs-orders.md)), a bodge wire, a firmware change, or an operating procedure. The math behind each issue is in [design-requirements.md](design-requirements.md) (DC-xx).
+Constraint: no new purchases. Every fix below uses parts already bought (see [BOM-vs-orders.md](../hardware/rev-a/bom/BOM-vs-orders.md)), a bodge wire, a firmware change, or an operating procedure. The math behind each issue is in [design-requirements.md](design-requirements.md) (DC-xx).
 
 **Status (2026-11-01):** firmware fixes for #5, #6, #7, #8, #11, #15 and #16 are implemented in `CAPSTONE/pico-firmware` (see FIXES.md there; host tests pass, hardware bring-up still to do). Hardware steps for #1–#6 and #12 are in [REWORK.md](REWORK.md), with a board map.
 

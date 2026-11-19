@@ -87,6 +87,19 @@ ntcs0603e3,electrical,Max power at 25 °C,Pmax25,,,125,mW,,1,Quick reference dat
 ntcs0603e3,electrical,Dissipation factor,D,,3.0,,mW/K,,1,Quick reference data,self-heating
 ntcs0603e3,thermal,Thermal time constant,τ,,,<4,s,,1,Quick reference data,response time
 ntcs0603e3,thermal,Operating temperature,,-55,,150,°C,zero power,1,Quick reference data,temperature
+lm66100,absmax,VIN,VIN,-6,,6,V,reverse polarity standoff to −6 V,4,6.1 Absolute maximum,"absmax,reverse polarity,5v"
+lm66100,absmax,"VOUT, VCE, VST",,-0.3,,6,V,,4,6.1 Absolute maximum,absmax
+lm66100,absmax,Continuous switch current,"ISW,MAX",,,1.5,A,"pulsed 2.5 A ≤120 ms, 2 %",4,6.1 Absolute maximum,current
+lm66100,power,Input voltage (operating),VIN,1.5,,5.5,V,,4,6.3 Recommended operating,"supply,5v input"
+lm66100,power,On-resistance,RON,,79,95,mΩ,"VIN = 5 V, 25 °C; 120 mΩ max −40…125 °C",5,6.5 Electrical characteristics,"ron,drop"
+lm66100,power,Quiescent current,"IQ,VIN",,0.15,0.3,µA,VIN = 3.6 V,5,6.5,iq
+lm66100,control,CE turn-on threshold (VCE−VIN),VON,-250,-150,-80,mV,,5,6.5 Comparator chip enable,"ce,threshold"
+lm66100,control,CE turn-off threshold (VCE−VIN),VOFF,0,35,80,mV,,5,6.5,"ce,threshold,reverse current"
+lm66100,control,Body diode forward voltage,VFWD,0.1,0.5,1.1,V,"IOUT = 10 mA, switch off",5,6.5,body diode
+lm66100,control,ST output low,"VOL,ST",,,0.1,V,"IST = 1 mA; open-drain, low when disabled",5,6.5,status
+lm66100,pinout,SC-70-6 pinout,,,,,,"1 VIN, 2 GND, 3 CE (don't float), 4 NC, 5 ST (GND if unused), 6 VOUT",3,5 Pin configuration,pinout
+lm66100,application,Always-on reverse-current blocking,,,,,,tie CE to VOUT; switch opens when VOUT > VIN + VOFF,9,8.3.2 RCB,"ideal diode,oring,reverse current"
+lm66100,layout,Input capacitor,CIN,,1,,µF,close to device; wide VIN/VOUT/GND traces,13,10 Power supply recommendations,"decoupling,layout"
 ao3400a,absmax,Drain-source voltage,VDS,,,30,V,,1,Absolute maximum,absmax
 ao3400a,absmax,Gate-source voltage,VGS,-12,,12,V,,1,Absolute maximum,"absmax,gate"
 ao3400a,absmax,Continuous drain current,ID,,,5.7,A,TA = 25 °C (4.7 A at 70 °C),1,Absolute maximum,current
@@ -115,11 +128,21 @@ nx_74lvc1g86,digital,VOH at −100 µA,VOH,VCC−0.1,,,V,light load (R20 10k int
 nx_74lvc1g86,digital,VOL at 100 µA,VOL,,,0.10,V,,5,10 Table 7,"phase,output level"
 nx_74lvc1g86,timing,Propagation delay A/B→Y,tpd,0.5,2.3,5.0,ns,"VCC 3.0–3.6 V, CL = 50 pF",6,11 Table 8,"tpd,phase"
 nx_74lvc1g86,power,Power dissipation capacitance,CPD,,25,,pF,VCC = 3.3 V,6,Table 8,dynamic current
+bat54ws_mcc,absmax,Reverse voltage,VR,,,30,V,"VRRM 30 V, VR(RMS) 21 V",2,Maximum ratings,"absmax,reverse"
+bat54ws_mcc,absmax,Average forward current,IF(AV),,,200,mA,,2,Maximum ratings,current
+bat54ws_mcc,electrical,Forward voltage,VF,,,0.24 / 0.32 / 0.40,V,IF = 0.1 / 1 / 10 mA,2,Electrical characteristics,"vf,peak detector"
+bat54ws_mcc,electrical,Junction capacitance,CJ,,,10,pF,"VR = 1 V, 1 MHz",2,Electrical characteristics,"capacitance,rf"
+bat54ws_mcc,electrical,Reverse current,IR,,,2,µA,VR = 25 V,2,Electrical characteristics,leakage
+bat54ws_mcc,electrical,Reverse recovery,trr,,,5,ns,,2,Electrical characteristics,"speed,rf"
+bat54ws_mcc,pinout,SOD-323,,,,,,bar = cathode (KiCad pad 1 = K → /PASSIVE_PEAK ✓),1,Body marking,"pinout,orientation"
 yageo_rc_l,power,RC0805 rated power,P70,,,0.125,W,"at 70 °C, derate to 0 at 155 °C",5,Electrical characteristics / Power rating,"power,derating,0805"
 yageo_rc_l,power,RC1206 rated power,P70,,,0.25,W,at 70 °C (R1 24 Ω),6,Electrical characteristics,"power,1206,backlight"
 yageo_rc_l,electrical,RC0805 max working voltage,,,,150,V,overload 300 V,5,Electrical characteristics,"voltage,0805"
 yageo_rc_l,electrical,RC1206 max working voltage,,,,200,V,overload 400 V,6,Electrical characteristics,"voltage,1206"
 yageo_rc_l,electrical,"TCR (1 %, 10 Ω–10 MΩ)",,,,±100,ppm/°C,,5,Electrical characteristics,tcr
+kemet_x7r,electrical,X7R temperature stability,,-15,,15,%,−55…+125 °C; no DC-bias curve in datasheet (use KEMET K-SIM),1,Overview,"x7r,dc bias"
+kemet_x7r,electrical,C0805C105K3RACTU rating,,,1 µF ±10 %,25,V,,1,Ordering,rating
+kemet_c0g,electrical,C0G stability,,,0 ±30 ppm/°C,,,no DC-bias or ageing loss,1,Overview,"c0g,stability"
 omron_b3f,electrical,Switch rating (resistive),,1,,50,mA,3–24 VDC (B3F-G variant for 100 µA),3,Ratings/Characteristics,"switch,minimum current,buttons"
 omron_b3f,electrical,Bounce time,,,,5,ms,,3,Ratings/Characteristics,"debounce,buttons"
 omron_b3f,electrical,Contact resistance,,,,100,mΩ,initial,3,Ratings/Characteristics,contact
