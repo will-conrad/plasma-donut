@@ -29,6 +29,12 @@ Readings match the first run within 1 LSB: MCP3208 CH0–3 ≈ 4087, Pico ADC �
 - **First VSYS reading after boot read 3.48 V**, then 4.68 V from the next second. Discard the first sweep after start-up.
 - **MCP3208 open-input spread 9–15 LSB p-p** in a 16-sample burst. The 16-sample average brings that to about ±1.5 LSB (≈ 0.04 °C at 25 °C) [calc]. Watch it on the live rig.
 
+## 2026-11-18: MOS A thermistor (J3, sensor on Brennan's board)
+- Thermal camera read 60 °C (falling) while the board read about 20 °C. Will set a +40.0 °C offset on MOS A (`TEMP_CAL_OFFSET` in config.h). Gain left at 1.
+- Same session: the board read a steady 19.9 kΩ (≈ 8 °C); a meter across the thermistor read 1380 Ω (≈ 87 °C by the Beta model); with the cable unplugged, the meter showed open between its two wires at the J3 end. The thermistor sits in parallel with a capacitor on Brennan's board.
+- Second point: camera 36 °C while the board read 17.0 kΩ (shown 52 °C with the +40 offset). A fixed offset can't fit both points. **About 10 kΩ in series with the NTC fits both** within the camera's ±2 °C, so the +40 offset is replaced by `TEMP_SERIES_OHM` = 10 kΩ on MOS A (offset back to 0). With it, 17.0 kΩ reads 34.7 °C.
+- **To confirm with Brennan:** is there a 10 kΩ resistor in series with the MOS A thermistor (an RC filter with its parallel cap)? If his value differs, change `TEMP_SERIES_OHM` and `SERIES` in `tools/cal_thermistors.py`.
+
 ### Still to do
 - Plug in the NTCs: a 10 k resistor should read 25.0 °C, a finger should warm it.
 - Bench supply into J11/J12 against a multimeter, then store the VDD gains.

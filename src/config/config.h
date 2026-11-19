@@ -20,6 +20,14 @@
 #define NTC_RFIX_OHM          10000.0f /* R4-R7 on top, from /VREF_ADC [netlist] */
 #define NTC_CODE_OPEN         4070.0f  /* at or above: open cable. Board reads 4080-4094 open (bench 2026-11-17); -55 C is code 4037 [calc] */
 #define NTC_CODE_SHORT        5.0f     /* at or below: shorted cable */
+/* Per-sensor correction, T_true = gain * T_board + offset, in the order
+ * MOS A, MOS B, Coil A, Coil B. Set by tools/cal_thermistors.py. */
+#define TEMP_CAL_GAIN    { 1.0000f, 1.0000f, 1.0000f, 1.0000f }
+#define TEMP_CAL_OFFSET  { +0.00f, +0.00f, +0.00f, +0.00f }
+/* Resistance in series with each NTC on the far board, subtracted before the
+ * Beta model. MOS A: about 10k fits camera 60 C / board 20 C and camera 36 C /
+ * board 17.0k (2026-11-18) [assumed: a 10k resistor on Brennan's board, to confirm]. */
+#define TEMP_SERIES_OHM  { 10000.0f, 0.0f, 0.0f, 0.0f }
 #define TEMP_WARN_C           80.0f    /* PLACEHOLDER until Brennan gives real limits */
 
 /* ---- Coil VDD taps: 100k / 10k [netlist] ---- */

@@ -45,6 +45,31 @@ int main(void)
     assert(code_for_temp(-55.0f) < NTC_CODE_OPEN);
     assert(code_for_temp(150.0f) > NTC_CODE_SHORT);
 
+    /* calibration applies gain * T + offset from config.h; faults pass through */
+    {
+        const float g[4] = TEMP_CAL_GAIN, o[4] = TEMP_CAL_OFFSET;
+        for (unsigned k = 0; k < 4; k++)
+            assert(near(ntc_apply_cal(ntc_temp_c(2048.0f), k).value, g[k] * 25.0f + o[k], 0.01f));
+        assert(near(ntc_apply_cal(ntc_temp_c(2048.0f), 4).value, 25.0f, 0.01f));   /* out of range: untouched */
+    }
+    assert(ntc_apply_cal(ntc_temp_c(4095.0f), 0).status == RD_OPEN);
+
+    /* series compensation: NTC at 36 C (6637 ohm) behind the configured series R */
+    {
+        const float rs[4] = TEMP_SERIES_OHM, g[4] = TEMP_CAL_GAIN, o[4] = TEMP_CAL_OFFSET;
+        for (unsigned k = 0; k < 4; k++) {
+            float r = 6637.0f + rs[k];
+            float code = ADC_FULL_SCALE * r / (r + NTC_RFIX_OHM);
+            assert(near(ntc_temp_c_sensor(code, k).value, g[k] * 36.0f + o[k], 0.05f));
+        }
+        /* reading below the series resistance means the NTC itself is shorted */
+        if (rs[0] > 100.0f) {
+            float r = rs[0] * 0.5f;
+            assert(ntc_temp_c_sensor(ADC_FULL_SCALE * r / (r + NTC_RFIX_OHM), 0).status == RD_SHORT);
+        }
+        assert(ntc_temp_c_sensor(4095.0f, 0).status == RD_OPEN);
+    }
+
     /* VDD: 12 V on the tap -> 1.0909 V at the pin -> code 1354.0 */
     assert(near(vdd_volts(1354.0f, 1.0f).value, 12.0f, 0.01f));
     assert(near(vdd_volts(4096.0f, 1.0f).value, 36.3f, 0.001f));

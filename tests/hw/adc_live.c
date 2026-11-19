@@ -25,9 +25,9 @@ static void sample(void)
     for (unsigned in = 0; in < 4; in++) pico[in] = picoadc_read_burst(in, ADC_OVERSAMPLE);
 }
 
-static void fmt_temp(char *buf, size_t n, const char *name, float code)
+static void fmt_temp(char *buf, size_t n, const char *name, float code, unsigned sensor)
 {
-    reading_t t = ntc_temp_c(code);
+    reading_t t = ntc_temp_c_sensor(code, sensor);
     if (t.status == RD_OK) snprintf(buf, n, "%-7s %7.2f C%s", name, (double)t.value,
                                     t.value >= TEMP_WARN_C ? " !" : "");
     else                   snprintf(buf, n, "%-7s %7s", name, rd_status_str(t.status));
@@ -40,7 +40,7 @@ static void draw_values(void)
     gfx_text(0, 0, "ADC live  values  1/2");
     gfx_invert_line(0);
     for (int i = 0; i < 4; i++) {
-        fmt_temp(line, sizeof line, name[i], mcp[i].mean);
+        fmt_temp(line, sizeof line, name[i], mcp[i].mean, (unsigned)i);
         gfx_text(0, 1 + i, line);
     }
     reading_t va = vdd_volts(pico[PICOADC_IN_VDD_A].mean, VDD_GAIN_DEFAULT);

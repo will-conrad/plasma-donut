@@ -28,6 +28,13 @@ float ntc_resistance_ohm(float code);
 /* Beta model: 1/T = 1/T0 + ln(R/R0)/B. Returns degrees C, or OPEN / SHORT. */
 reading_t ntc_temp_c(float code);
 
+/* Full conversion for sensor 0-3: subtracts TEMP_SERIES_OHM, applies the Beta
+ * model, then TEMP_CAL_GAIN / TEMP_CAL_OFFSET. OPEN / SHORT as ntc_temp_c. */
+reading_t ntc_temp_c_sensor(float code, unsigned sensor);
+
+/* Apply the TEMP_CAL_* correction for sensor 0-3. Passes OPEN/SHORT through. */
+reading_t ntc_apply_cal(reading_t t, unsigned sensor);
+
 /* Coil supply: VDD = 11 * Vpin * gain. OVER_RANGE at full scale. */
 reading_t vdd_volts(float code, float gain);
 

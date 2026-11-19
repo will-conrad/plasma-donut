@@ -24,16 +24,33 @@ float ntc_resistance_ohm(float code)
     return NTC_RFIX_OHM * code / (ADC_FULL_SCALE - code);
 }
 
-reading_t ntc_temp_c(float code)
+static reading_t ntc_from_code(float code, float r_series)
 {
     reading_t r = { 0.0f, RD_OK };
     if (code >= NTC_CODE_OPEN)  { r.status = RD_OPEN;  return r; }
     if (code <= NTC_CODE_SHORT) { r.status = RD_SHORT; return r; }
 
-    float res   = ntc_resistance_ohm(code);
+    float res = ntc_resistance_ohm(code) - r_series;
+    if (res <= 1.0f) { r.status = RD_SHORT; return r; }   /* less than the series part: NTC shorted */
     float inv_t = 1.0f / NTC_T0_K + logf(res / NTC_R0_OHM) / NTC_BETA_K;
     r.value = 1.0f / inv_t - 273.15f;
     return r;
+}
+
+reading_t ntc_temp_c(float code) { return ntc_from_code(code, 0.0f); }
+
+reading_t ntc_temp_c_sensor(float code, unsigned sensor)
+{
+    static const float series[4] = TEMP_SERIES_OHM;
+    return ntc_apply_cal(ntc_from_code(code, sensor < 4 ? series[sensor] : 0.0f), sensor);
+}
+
+reading_t ntc_apply_cal(reading_t t, unsigned sensor)
+{
+    static const float gain[4]   = TEMP_CAL_GAIN;
+    static const float offset[4] = TEMP_CAL_OFFSET;
+    if (t.status == RD_OK && sensor < 4) t.value = gain[sensor] * t.value + offset[sensor];
+    return t;
 }
 
 reading_t vdd_volts(float code, float gain)
